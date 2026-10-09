@@ -1,0 +1,226 @@
+/* Global Styles for FlyingBird AETHER Theme */
+:root {
+  --color-bg-dark: #081E31;
+  --color-bg-alt: #0c263d;
+  --color-cyan: #43C6D5;
+  --color-green-mist: #C5E9E6;
+  --color-white-cloud: #F7FCFC;
+  --color-orange-dawn: #F4A261;
+  --color-text-dark: #193447;
+  --color-text-light: #F7FCFC;
+  --color-text-muted: #C5E9E6;
+
+  --font-main: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --max-width: 1240px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-main);
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-light);
+  line-height: 1.6;
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  position: relative;
+}
+
+main {
+  flex: 1;
+}
+
+/* Common Container */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Typography Base */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-white-cloud);
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+a {
+  color: var(--color-cyan);
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--color-orange-dawn);
+}
+
+/* Shared Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.6rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid transparent;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #43C6D5 0%, #2ba5b4 100%);
+  color: #081E31;
+  box-shadow: 0 4px 16px rgba(67, 198, 213, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(67, 198, 213, 0.45);
+  background: linear-gradient(135deg, #51d4e3 0%, #3bb5c4 100%);
+  color: #051321;
+}
+
+.btn-secondary {
+  background: rgba(197, 233, 230, 0.08);
+  color: #F7FCFC;
+  border-color: rgba(197, 233, 230, 0.2);
+  backdrop-filter: blur(8px);
+}
+
+.btn-secondary:hover {
+  background: rgba(197, 233, 230, 0.16);
+  border-color: #43C6D5;
+  color: #43C6D5;
+  transform: translateY(-2px);
+}
+
+.btn-orange {
+  background: linear-gradient(135deg, #F4A261 0%, #e78e47 100%);
+  color: #081E31;
+  box-shadow: 0 4px 16px rgba(244, 162, 97, 0.3);
+}
+
+.btn-orange:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(244, 162, 97, 0.45);
+  color: #000;
+}
+
+/* Badge tags */
+.tag-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(67, 198, 213, 0.12);
+  color: #43C6D5;
+  border: 1px solid rgba(67, 198, 213, 0.3);
+}
+
+/* Section Header Styles */
+.section-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 3rem;
+}
+
+.section-header .section-title {
+  font-size: 2.25rem;
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #FFFFFF 0%, #C5E9E6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.section-header .section-desc {
+  font-size: 1.05rem;
+  color: rgba(197, 233, 230, 0.8);
+  line-height: 1.7;
+}
+
+/* Article Markdown Styling */
+.prose {
+  color: #D4ECE9;
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+.prose h2 {
+  font-size: 1.65rem;
+  color: #F7FCFC;
+  margin-top: 2.5rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(67, 198, 213, 0.2);
+}
+
+.prose h3 {
+  font-size: 1.3rem;
+  color: #43C6D5;
+  margin-top: 1.8rem;
+  margin-bottom: 0.8rem;
+}
+
+.prose p {
+  margin-bottom: 1.4rem;
+}
+
+.prose ul, .prose ol {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.prose li {
+  margin-bottom: 0.5rem;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  font-size: 0.95rem;
+}
+
+.prose th, .prose td {
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(197, 233, 230, 0.15);
+  text-align: left;
+}
+
+.prose th {
+  background: rgba(67, 198, 213, 0.15);
+  color: #F7FCFC;
+}
+
+.prose code {
+  background: rgba(67, 198, 213, 0.12);
+  color: #43C6D5;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* Responsiveness helper */
+@media (max-width: 768px) {
+  .section-header .section-title {
+    font-size: 1.75rem;
+  }
+}

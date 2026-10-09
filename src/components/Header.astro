@@ -1,0 +1,306 @@
+---
+// Header.astro
+import { COMMERCIAL_AFF_URL } from '../data/plans';
+
+interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = '/' } = Astro.props;
+
+const navItems = [
+  { label: '首页', href: '/' },
+  { label: '套餐列表', href: '/plans/' },
+  { label: '连接旅程', href: '/journey/' },
+  { label: '客户端指南', href: '/clients/' },
+  { label: '节点知识', href: '/network/' },
+  { label: '文章目录', href: '/academy/' },
+  { label: '常见问题', href: '/faq/' }
+];
+---
+
+<header class="site-header">
+  <div class="header-container">
+    <a href="/" class="brand-logo" aria-label="FlyingBird 机场首页">
+      <svg class="logo-icon" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="18" fill="rgba(67, 198, 213, 0.1)" stroke="#43C6D5" stroke-width="1.5"/>
+        <path d="M10 23C16 23 20 16 30 10C22 18 20 22 16 30C15 25 12 24 10 23Z" fill="url(#headerLogoGrad)"/>
+        <defs>
+          <linearGradient id="headerLogoGrad" x1="10" y1="10" x2="30" y2="30">
+            <stop stop-color="#43C6D5"/>
+            <stop offset="1" stop-color="#F4A261"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="brand-text">FlyingBird<span class="sub-brand">机场</span></span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="主导航">
+      {navItems.map(item => (
+        <a 
+          href={item.href} 
+          class={`nav-link ${currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href)) ? 'active' : ''}`}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="header-cta">
+      <a 
+        href={COMMERCIAL_AFF_URL} 
+        target="_blank" 
+        rel="sponsored nofollow noopener"
+        class="cta-btn primary-btn"
+      >
+        <span>立即注册</span>
+        <svg class="btn-arrow" viewBox="0 0 16 16" fill="none">
+          <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+
+      <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="切换菜单" aria-expanded="false">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Dropdown Menu -->
+  <div id="mobile-menu" class="mobile-menu-drawer" aria-hidden="true">
+    <nav class="mobile-nav">
+      {navItems.map(item => (
+        <a 
+          href={item.href} 
+          class={`mobile-nav-link ${currentPath === item.href ? 'active' : ''}`}
+        >
+          {item.label}
+        </a>
+      ))}
+      <a 
+        href={COMMERCIAL_AFF_URL} 
+        target="_blank" 
+        rel="sponsored nofollow noopener"
+        class="mobile-cta-btn"
+      >
+        立即注册并开通
+      </a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(8, 30, 49, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(67, 198, 213, 0.15);
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .header-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0.85rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+  }
+
+  .brand-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #F7FCFC;
+    letter-spacing: -0.02em;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+
+  .sub-brand {
+    font-size: 0.95rem;
+    color: #43C6D5;
+    margin-left: 0.35rem;
+    font-weight: 500;
+  }
+
+  .desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .nav-link {
+    color: #C5E9E6;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.4rem 0.2rem;
+    position: relative;
+    transition: color 0.2s;
+  }
+
+  .nav-link:hover, .nav-link.active {
+    color: #43C6D5;
+  }
+
+  .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #43C6D5, #F4A261);
+    border-radius: 2px;
+  }
+
+  .header-cta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  }
+
+  .primary-btn {
+    background: linear-gradient(135deg, #43C6D5 0%, #2ba5b4 100%);
+    color: #081E31;
+    box-shadow: 0 4px 14px rgba(67, 198, 213, 0.25);
+  }
+
+  .primary-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(67, 198, 213, 0.4);
+    background: linear-gradient(135deg, #51d4e3 0%, #3bb5c4 100%);
+  }
+
+  .btn-arrow {
+    width: 14px;
+    height: 14px;
+  }
+
+  .mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.4rem;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .mobile-toggle .bar {
+    width: 22px;
+    height: 2px;
+    background: #C5E9E6;
+    transition: transform 0.2s, opacity 0.2s;
+    border-radius: 2px;
+  }
+
+  .mobile-menu-drawer {
+    display: none;
+    background: #081E31;
+    border-bottom: 1px solid rgba(67, 198, 213, 0.2);
+    padding: 1rem 1.5rem 1.5rem;
+  }
+
+  .mobile-menu-drawer.open {
+    display: block;
+  }
+
+  .mobile-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .mobile-nav-link {
+    color: #C5E9E6;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(197, 233, 230, 0.08);
+  }
+
+  .mobile-nav-link.active {
+    color: #43C6D5;
+    font-weight: 600;
+  }
+
+  .mobile-cta-btn {
+    margin-top: 0.5rem;
+    display: block;
+    text-align: center;
+    background: #43C6D5;
+    color: #081E31;
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  @media (max-width: 900px) {
+    .desktop-nav {
+      display: none;
+    }
+    .mobile-toggle {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  function setupMobileMenu() {
+    const toggle = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+
+    if (toggle && menu) {
+      toggle.addEventListener('click', () => {
+        const isOpen = menu.classList.contains('open');
+        if (isOpen) {
+          menu.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+          menu.setAttribute('aria-hidden', 'true');
+        } else {
+          menu.classList.add('open');
+          toggle.setAttribute('aria-expanded', 'true');
+          menu.setAttribute('aria-hidden', 'false');
+        }
+      });
+    }
+  }
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    setupMobileMenu();
+  } else {
+    document.addEventListener('DOMContentLoaded', setupMobileMenu);
+  }
+</script>

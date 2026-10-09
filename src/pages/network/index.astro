@@ -1,0 +1,157 @@
+---
+// src/pages/network/index.astro
+import Layout from '../../layouts/Layout.astro';
+import { COMMERCIAL_AFF_URL } from '../../data/plans';
+
+const title = "FlyingBird节点知识与架构解析｜全球中转与线路优化技术";
+const description = "了解 FlyingBird 节点覆盖区域、BGP 线路优化原理、测速机制与加密协议基础知识。";
+
+const regions = [
+  { name: '香港节点 (Hong Kong)', tag: '低延迟首选', desc: '距离中国大陆地理位置最近，平均延迟极低，非常适合日常网页浏览、即时通讯与在线游戏。' },
+  { name: '日本节点 (Japan)', tag: '流媒体与应用', desc: '拥有极为充沛的国际出口带宽，完美适配日本流媒体、动画平台与开发者 API 访问需求。' },
+  { name: '美国节点 (United States)', tag: '大流量下载', desc: '美洲方向主力枢纽，吞吐容量极大，适合系统镜像下载、云端数据备份与海外学术仓库查阅。' },
+  { name: '德国节点 (Germany)', tag: '欧洲节点备用', desc: '欧洲方向重要节点，为欧洲业务沟通、海外服务器运维及特定区域路由提供稳定保障。' }
+];
+---
+
+<Layout title={title} description={description} canonicalPath="/network/">
+  <section class="network-page">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="tag-badge">线路架构</span>
+        <h1 class="section-title">FlyingBird 节点与网络技术解析</h1>
+        <p class="section-desc">
+          基于现代化分布式中转架构，为您呈现高质量海外中转节点的分布与原理。
+        </p>
+      </div>
+
+      <div class="regions-grid">
+        {regions.map(r => (
+          <div class="region-card">
+            <span class="region-tag">{r.tag}</span>
+            <h2>{r.name}</h2>
+            <p>{r.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="knowledge-box-grid">
+        <div class="k-box">
+          <h3>BGP 入口与中转优化</h3>
+          <p>
+             FlyingBird 在入口接入点采用了运营商级的 BGP 多线智能路由。数据包进入国内中转点后，经由高带宽优化专线直达海外出境节点，避开海缆公共出口的高峰期拥堵。
+          </p>
+        </div>
+
+        <div class="k-box">
+          <h3>避免节点测速误判</h3>
+          <p>
+            在客户端进行节点 Ping 值检测时，测得的延时反映的是数据包往返时间（RTT），而非物理带宽上限。如果您在选节点时遇到疑惑，请参阅 <a href="/academy/testing-environment/">节点测试如何避免误判教程</a>。
+          </p>
+        </div>
+      </div>
+
+      <div class="network-cta text-center">
+        <h3>体验 FlyingBird 全球优化节点</h3>
+        <p>提供 ¥15/月 300GB 月付套餐以及一次性买断流量包。</p>
+        <div class="cta-btns">
+          <a href={COMMERCIAL_AFF_URL} target="_blank" rel="sponsored nofollow noopener" class="btn btn-primary">
+            立即订阅 FlyingBird 节点 →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .network-page {
+    padding: 5rem 0;
+  }
+
+  .text-center {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .regions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin: 3rem 0;
+  }
+
+  .region-card {
+    background: rgba(12, 38, 61, 0.7);
+    border: 1px solid rgba(67, 198, 213, 0.2);
+    border-radius: 16px;
+    padding: 2rem;
+  }
+
+  .region-tag {
+    font-size: 0.8rem;
+    color: #43C6D5;
+    background: rgba(67, 198, 213, 0.12);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .region-card h2 {
+    font-size: 1.35rem;
+    margin: 0.8rem 0 0.6rem;
+    color: #F7FCFC;
+  }
+
+  .region-card p {
+    font-size: 0.92rem;
+    color: rgba(197, 233, 230, 0.8);
+    line-height: 1.6;
+  }
+
+  .knowledge-box-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .k-box {
+    background: rgba(8, 30, 49, 0.6);
+    border: 1px solid rgba(197, 233, 230, 0.15);
+    border-radius: 14px;
+    padding: 1.8rem;
+  }
+
+  .k-box h3 {
+    font-size: 1.2rem;
+    color: #F4A261;
+    margin-bottom: 0.6rem;
+  }
+
+  .k-box p {
+    font-size: 0.92rem;
+    color: rgba(197, 233, 230, 0.8);
+    line-height: 1.6;
+  }
+
+  .network-cta {
+    background: rgba(12, 38, 61, 0.8);
+    border: 1px solid rgba(67, 198, 213, 0.2);
+    border-radius: 20px;
+    padding: 3rem 2rem;
+  }
+
+  .cta-btns {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  @media (max-width: 768px) {
+    .regions-grid, .knowledge-box-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

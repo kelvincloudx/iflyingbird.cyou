@@ -1,0 +1,211 @@
+---
+// WindCursor.astro
+---
+
+<div id="wind-cursor-overlay" aria-hidden="true">
+  <div id="wind-cursor-ring"></div>
+  <canvas id="wind-cursor-canvas"></canvas>
+</div>
+
+<style>
+  #wind-cursor-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+  }
+
+  #wind-cursor-ring {
+    position: absolute;
+    top: -30px;
+    left: -30px;
+    width: 24px;
+    height: 24px;
+    border: 1.5px solid rgba(67, 198, 213, 0.6);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    transition: transform 0.15s ease-out, border-color 0.2s, width 0.2s, height 0.2s;
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(67, 198, 213, 0.3);
+    display: none;
+  }
+
+  #wind-cursor-ring.hovering {
+    width: 36px;
+    height: 36px;
+    border-color: rgba(244, 162, 97, 0.8);
+    box-shadow: 0 0 16px rgba(244, 162, 97, 0.4);
+    background: rgba(244, 162, 97, 0.05);
+  }
+
+  #wind-cursor-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  @media (max-width: 768px), (pointer: coarse) {
+    #wind-cursor-overlay {
+      display: none !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #wind-cursor-overlay {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  function initWindCursor() {
+    // Disable on touch screen or prefers-reduced-motion
+    if (window.matchMedia('(pointer: coarse)').matches || 
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+        window.innerWidth <= 768) {
+      return;
+    }
+
+    const ring = document.getElementById('wind-cursor-ring');
+    const canvas = document.getElementById('wind-cursor-canvas') as HTMLCanvasElement | null;
+    if (!ring || !canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    window.addEventListener('resize', () => {
+      if (canvas) {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+    }, { passive: true });
+
+    ring.style.display = 'block';
+
+    interface TrailPoint {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      life: number;
+      maxLife: number;
+      size: number;
+    }
+
+    const trail: TrailPoint[] = [];
+    let mouseX = -100;
+    let mouseY = -100;
+    let targetX = -100;
+    let targetY = -100;
+    let isHovering = false;
+    let lastMouseX = -100;
+    let lastMouseY = -100;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      targetX = e.clientX;
+      targetY = e.clientY;
+
+      // Calculate speed for breeze lines
+      const dx = targetX - lastMouseX;
+      const dy = targetY - lastMouseY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist > 3 && trail.length < 35) {
+        trail.push({
+          x: targetX,
+          y: targetY,
+          vx: -dx * 0.15 + (Math.random() - 0.5) * 1.5,
+          vy: -dy * 0.15 + (Math.random() - 0.5) * 1.5,
+          life: 1.0,
+          maxLife: 20 + Math.random() * 15,
+          size: 1.5 + Math.random() * 2
+        });
+      }
+
+      lastMouseX = targetX;
+      lastMouseY = targetY;
+
+      // Check hover targets
+      const targetEl = e.target as HTMLElement | null;
+      if (targetEl && (targetEl.closest('a, button, .plan-card, .hover-responsive, input, select'))) {
+        if (!isHovering) {
+          isHovering = true;
+          ring.classList.add('hovering');
+        }
+      } else {
+        if (isHovering) {
+          isHovering = false;
+          ring.classList.remove('hovering');
+        }
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+
+    let animId: number;
+
+    function renderTrail() {
+      if (document.hidden) {
+        animId = requestAnimationFrame(renderTrail);
+        return;
+      }
+
+      // Smooth ring movement
+      mouseX += (targetX - mouseX) * 0.25;
+      mouseY += (targetY - mouseY) * 0.25;
+
+      ring.style.left = `${mouseX}px`;
+      ring.style.top = `${mouseY}px`;
+
+      ctx?.clearRect(0, 0, width, height);
+
+      // Draw breeze trail
+      for (let i = trail.length - 1; i >= 0; i--) {
+        const p = trail[i];
+        p.life -= 1 / p.maxLife;
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.life <= 0) {
+          trail.splice(i, 1);
+          continue;
+        }
+
+        if (ctx) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(67, 198, 213, ${p.life * 0.45})`;
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      animId = requestAnimationFrame(renderTrail);
+    }
+
+    renderTrail();
+
+    // Clean up on page unload
+    window.addEventListener('beforeunload', () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('mousemove', handleMouseMove);
+    });
+  }
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    initWindCursor();
+  } else {
+    document.addEventListener('DOMContentLoaded', initWindCursor);
+  }
+</script>

@@ -1,0 +1,176 @@
+---
+// Footer.astro
+import { COMMERCIAL_AFF_URL } from '../data/plans';
+---
+
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-grid">
+      <div class="footer-brand-col">
+        <a href="/" class="footer-logo">
+          <svg class="logo-icon" viewBox="0 0 40 40" fill="none">
+            <circle cx="20" cy="20" r="18" fill="rgba(67, 198, 213, 0.1)" stroke="#43C6D5" stroke-width="1.5"/>
+            <path d="M10 23C16 23 20 16 30 10C22 18 20 22 16 30C15 25 12 24 10 23Z" fill="url(#footerLogoGrad)"/>
+            <defs>
+              <linearGradient id="footerLogoGrad" x1="10" y1="10" x2="30" y2="30">
+                <stop stop-color="#43C6D5"/>
+                <stop offset="1" stop-color="#F4A261"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <span class="brand-text">FlyingBird<span class="sub-brand">机场</span></span>
+        </a>
+        <p class="brand-tagline">
+          向更广阔的数字天空出发。探索 FlyingBird 高速稳定的网络订阅方案与专业使用指南。
+        </p>
+      </div>
+
+      <div class="footer-links-col">
+        <h4 class="col-title">站内导航</h4>
+        <ul class="link-list">
+          <li><a href="/">首页</a></li>
+          <li><a href="/plans/">套餐列表</a></li>
+          <li><a href="/journey/">连接旅程</a></li>
+          <li><a href="/clients/">客户端指南</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links-col">
+        <h4 class="col-title">技术与文章</h4>
+        <ul class="link-list">
+          <li><a href="/network/">节点知识</a></li>
+          <li><a href="/academy/">文章目录</a></li>
+          <li><a href="/faq/">常见问题 FAQ</a></li>
+          <li><a href={COMMERCIAL_AFF_URL} target="_blank" rel="sponsored nofollow noopener" class="aff-link">前往订阅平台 →</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="copyright">
+        © 2026 FlyingBird (iflyingbird.cyou). All rights reserved.
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: #051321;
+    border-top: 1px solid rgba(67, 198, 213, 0.15);
+    color: #C5E9E6;
+    padding: 3.5rem 1.5rem 2rem;
+    margin-top: 5rem;
+    position: relative;
+    z-index: 10;
+  }
+
+  .footer-container {
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    text-decoration: none;
+    margin-bottom: 0.85rem;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .brand-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #F7FCFC;
+  }
+
+  .sub-brand {
+    font-size: 0.9rem;
+    color: #43C6D5;
+    margin-left: 0.3rem;
+  }
+
+  .brand-tagline {
+    font-size: 0.9rem;
+    color: rgba(197, 233, 230, 0.7);
+    line-height: 1.6;
+    max-width: 340px;
+  }
+
+  .col-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #F7FCFC;
+    margin-bottom: 1rem;
+  }
+
+  .link-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .link-list a {
+    color: rgba(197, 233, 230, 0.75);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+
+  .link-list a:hover {
+    color: #43C6D5;
+  }
+
+  .aff-link {
+    color: #F4A261 !important;
+    font-weight: 600;
+  }
+
+  .aff-link:hover {
+    color: #ffb87b !important;
+  }
+
+  .disclosure-text {
+    font-size: 0.85rem;
+    color: rgba(197, 233, 230, 0.6);
+    line-height: 1.6;
+  }
+
+  .footer-bottom {
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(197, 233, 230, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: rgba(197, 233, 230, 0.5);
+  }
+
+  @media (max-width: 1024px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+</style>

@@ -1,0 +1,172 @@
+---
+// src/pages/clients/index.astro
+import Layout from '../../layouts/Layout.astro';
+import { COMMERCIAL_AFF_URL } from '../../data/plans';
+
+const title = "FlyingBird客户端指南｜Windows/macOS/iOS/Android 全平台下载与配置";
+const description = "下载并配置支持 FlyingBird 订阅的代理客户端，支持 Clash Verge, Shadowrocket, Stash 等主流软件。";
+
+const clients = [
+  {
+    os: 'Windows 操作系统',
+    recommended: 'Clash Verge Rev / Clash for Windows',
+    desc: '推荐使用开箱即用的 Clash Verge Rev，支持中文界面、TUN 模式以及规则集自动同步。安装后黏贴 FlyingBird 订阅 URL 即可完成一键节点配置。',
+    steps: ['在官方 Release 页面下载 .exe 安装包', '安装后打开软件，选择“订阅/Profiles”', '粘贴 FlyingBird 订阅链接，点击“Import”', '在“代理/Proxies”选定节点并开启“系统代理”']
+  },
+  {
+    os: 'macOS 苹果电脑',
+    recommended: 'Clash Verge Rev / Stash for Mac',
+    desc: '原生适配 Apple Silicon (M1/M2/M3) 芯片与 Intel 架构。图形化界面直观呈现流量带宽与节点延迟，支持系统级 DNS 解析。',
+    steps: ['下载 .dmg 安装包并拖入 Applications 目录', '赋予软件必要的网络拓展权限', '导入 FlyingBird 订阅 URL 并同步配置', '勾选菜单栏中的“System Proxy”启用连接']
+  },
+  {
+    os: 'iOS / iPadOS 设备',
+    recommended: 'Shadowrocket (小火箭) / Stash / Quantumult X',
+    desc: 'iOS 端最受欢迎的代理客户端。支持扫码一键导入 FlyingBird 配置、脚本扩展与丰富的分流策略。',
+    steps: ['在 App Store 使用非大陆区 Apple ID 获取应用', '打开 App，点击右上角加号按键添加类型“Subscribe”', '填入 FlyingBird 订阅 URL 并保存', '按提示安装 VPN 本地配置文件并开启连通']
+  },
+  {
+    os: 'Android 安卓系统',
+    recommended: 'Clash for Android / Surfboard / v2rayNG',
+    desc: '完美适配主流 Android 手机和平板。提供通知栏快捷开关、应用分流（Split Tunneling）以及电量优化控制。',
+    steps: ['下载安装 .apk 文件并安装', '进入“配置/Profiles”页面，添加 URL 订阅', '下拉刷新获取最新的 FlyingBird 节点', '回到首页点击“已停止”按钮切换至运行状态']
+  }
+];
+---
+
+<Layout title={title} description={description} canonicalPath="/clients/">
+  <section class="clients-page">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="tag-badge">客户端适配</span>
+        <h1 class="section-title">全平台客户端下载与设置指南</h1>
+        <p class="section-desc">
+          FlyingBird 支持全球主流的高性能加密代理客户端，配置简便，即刻体验高速连接。
+        </p>
+      </div>
+
+      <div class="clients-grid">
+        {clients.map(c => (
+          <div class="client-card">
+            <div class="client-os">{c.os}</div>
+            <h2>{c.recommended}</h2>
+            <p class="client-desc">{c.desc}</p>
+
+            <div class="steps-box">
+              <h4>快速配置步骤：</h4>
+              <ol>
+                {c.steps.map(step => (
+                  <li>{step}</li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="clients-notice-box">
+        <h3>订阅链接导入注意事项</h3>
+        <p>
+          在完成客户端软件安装后，请登录 <a href={COMMERCIAL_AFF_URL} target="_blank" rel="sponsored nofollow noopener">FlyingBird 商业平台</a> 复制专属订阅地址。请勿将个人订阅 URL 泄露给第三方。升级客户端前，建议阅读 <a href="/academy/client-updates/">客户端更新与备份知识</a>。
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .clients-page {
+    padding: 5rem 0;
+  }
+
+  .text-center {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .clients-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin: 3rem 0;
+  }
+
+  .client-card {
+    background: rgba(12, 38, 61, 0.7);
+    border: 1px solid rgba(67, 198, 213, 0.2);
+    border-radius: 16px;
+    padding: 2rem;
+  }
+
+  .client-os {
+    font-size: 0.85rem;
+    color: #F4A261;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+
+  .client-card h2 {
+    font-size: 1.35rem;
+    margin-bottom: 0.8rem;
+    color: #F7FCFC;
+  }
+
+  .client-desc {
+    font-size: 0.92rem;
+    color: rgba(197, 233, 230, 0.8);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .steps-box {
+    background: rgba(8, 30, 49, 0.6);
+    border-radius: 10px;
+    padding: 1.2rem;
+  }
+
+  .steps-box h4 {
+    font-size: 0.95rem;
+    color: #43C6D5;
+    margin-bottom: 0.6rem;
+  }
+
+  .steps-box ol {
+    padding-left: 1.2rem;
+    margin: 0;
+  }
+
+  .steps-box li {
+    font-size: 0.88rem;
+    color: rgba(197, 233, 230, 0.85);
+    margin-bottom: 0.4rem;
+  }
+
+  .clients-notice-box {
+    background: rgba(67, 198, 213, 0.08);
+    border: 1px stroke rgba(67, 198, 213, 0.2);
+    border-radius: 14px;
+    padding: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .clients-notice-box h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.6rem;
+    color: #F7FCFC;
+  }
+
+  .clients-notice-box p {
+    font-size: 0.95rem;
+    color: rgba(197, 233, 230, 0.85);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .clients-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

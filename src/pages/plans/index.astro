@@ -1,0 +1,333 @@
+---
+// src/pages/plans/index.astro
+import Layout from '../../layouts/Layout.astro';
+import { PLANS, COMMERCIAL_AFF_URL, DATA_META } from '../../data/plans';
+
+const title = "FlyingBird套餐价格表｜300GB月付套餐与一次性流量包对比";
+const description = "查看 FlyingBird 机场完整套餐价格与参数详情。提供 ¥15/月 300GB 月度订阅，以及 ¥25/300GB 和 ¥60/1000GB 一次性流量包。";
+---
+
+<Layout title={title} description={description} canonicalPath="/plans/">
+  <div class="plans-page">
+    <section class="page-header-sec">
+      <div class="container text-center">
+        <span class="tag-badge">完整价格与方案</span>
+        <h1 class="page-title">FlyingBird 套餐完整价格表</h1>
+        <p class="page-desc">
+          清晰划分月度订阅与一次性流量包。无隐藏计费，无编造优惠，资料核实日期：{DATA_META.dateUpdated}。
+        </p>
+      </div>
+    </section>
+
+    <!-- Packages Cards Grid -->
+    <section class="plans-cards-sec">
+      <div class="container">
+        <div class="plans-grid">
+          {PLANS.map(plan => (
+            <div class={`plan-detail-card ${plan.recommended ? 'featured' : ''}`}>
+              {plan.recommended && <span class="featured-badge">热销推荐</span>}
+              <div class="card-head">
+                <span class="plan-type-pill">{plan.period}</span>
+                <h2>{plan.name}</h2>
+                <div class="price-box">
+                  <span class="currency">¥</span>
+                  <span class="num">{plan.priceNum}</span>
+                  <span class="cycle">/ {plan.period === '月付' ? '月' : '次'}</span>
+                </div>
+              </div>
+
+              <div class="traffic-box">
+                <span class="traffic-num">{plan.traffic}</span>
+                <span class="traffic-sub">{plan.notice}</span>
+              </div>
+
+              <p class="plan-summary">{plan.description}</p>
+
+              <ul class="plan-features">
+                {plan.features.map(f => (
+                  <li>
+                    <svg class="check-icon" viewBox="0 0 16 16" fill="none">
+                      <path d="M4 8L7 11L12 4" stroke="#43C6D5" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div class="card-action">
+                <a 
+                  href={COMMERCIAL_AFF_URL} 
+                  target="_blank" 
+                  rel="sponsored nofollow noopener"
+                  class={`btn full-width ${plan.recommended ? 'btn-primary' : 'btn-secondary'}`}
+                >
+                  前往订阅平台购买 →
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Full Comparison Table -->
+    <section class="table-sec">
+      <div class="container">
+        <div class="section-header">
+          <span class="tag-badge">参数直观对比</span>
+          <h2 class="section-title">FlyingBird 三大套餐对照表</h2>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="plans-table">
+            <thead>
+              <tr>
+                <th>套餐名称</th>
+                <th>价格</th>
+                <th>流量额度</th>
+                <th>计费周期</th>
+                <th>重置规则</th>
+                <th>端口峰值</th>
+                <th>优化线路</th>
+                <th>商业购买入口</th>
+              </tr>
+            </thead>
+            <tbody>
+              {PLANS.map(p => (
+                <tr>
+                  <td class="font-bold">{p.name}</td>
+                  <td class="color-cyan font-bold">{p.price}</td>
+                  <td>{p.traffic}</td>
+                  <td>{p.period}</td>
+                  <td>{p.trafficType === 'monthly' ? '每月按时重置' : '不过期，用完为止'}</td>
+                  <td>1000Mbps</td>
+                  <td>中国大陆方向优化</td>
+                  <td>
+                    <a 
+                      href={COMMERCIAL_AFF_URL} 
+                      target="_blank" 
+                      rel="sponsored nofollow noopener"
+                      class="table-buy-link"
+                    >
+                      购买套餐
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .page-header-sec {
+    padding: 5rem 0 3rem;
+  }
+
+  .text-center {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .page-title {
+    font-size: 2.8rem;
+    margin: 1rem 0;
+  }
+
+  .page-desc {
+    font-size: 1.1rem;
+    color: rgba(197, 233, 230, 0.8);
+  }
+
+  .plans-cards-sec {
+    padding: 2rem 0 4rem;
+  }
+
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .plan-detail-card {
+    background: rgba(12, 38, 61, 0.75);
+    border: 1px solid rgba(67, 198, 213, 0.2);
+    border-radius: 18px;
+    padding: 2.2rem 1.8rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .plan-detail-card.featured {
+    border-color: #43C6D5;
+    box-shadow: 0 12px 36px rgba(67, 198, 213, 0.25);
+    background: rgba(12, 38, 61, 0.9);
+  }
+
+  .featured-badge {
+    position: absolute;
+    top: -14px;
+    right: 24px;
+    background: linear-gradient(90deg, #F4A261, #e78e47);
+    color: #081E31;
+    font-size: 0.8rem;
+    font-weight: 800;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+  }
+
+  .plan-type-pill {
+    font-size: 0.8rem;
+    color: #43C6D5;
+    background: rgba(67, 198, 213, 0.12);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+  }
+
+  .card-head h2 {
+    font-size: 1.4rem;
+    margin: 0.6rem 0;
+  }
+
+  .price-box {
+    margin-bottom: 1.2rem;
+  }
+
+  .price-box .currency {
+    font-size: 1.2rem;
+    color: #43C6D5;
+  }
+
+  .price-box .num {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #F7FCFC;
+  }
+
+  .price-box .cycle {
+    font-size: 0.9rem;
+    color: rgba(197, 233, 230, 0.7);
+  }
+
+  .traffic-box {
+    background: rgba(67, 198, 213, 0.08);
+    border: 1px solid rgba(67, 198, 213, 0.15);
+    border-radius: 10px;
+    padding: 0.8rem;
+    margin-bottom: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .traffic-num {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #43C6D5;
+  }
+
+  .traffic-sub {
+    font-size: 0.8rem;
+    color: rgba(197, 233, 230, 0.7);
+  }
+
+  .plan-summary {
+    font-size: 0.9rem;
+    color: rgba(197, 233, 230, 0.8);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+
+  .plan-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    flex: 1;
+  }
+
+  .plan-features li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    color: rgba(197, 233, 230, 0.9);
+  }
+
+  .check-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .table-sec {
+    padding: 3rem 0 5rem;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    background: rgba(12, 38, 61, 0.6);
+    border: 1px solid rgba(67, 198, 213, 0.15);
+    border-radius: 14px;
+    padding: 1rem;
+  }
+
+  .plans-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+  }
+
+  .plans-table th, .plans-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(197, 233, 230, 0.08);
+  }
+
+  .plans-table th {
+    color: #F7FCFC;
+    font-weight: 600;
+    background: rgba(67, 198, 213, 0.1);
+  }
+
+  .plans-table td {
+    color: rgba(197, 233, 230, 0.85);
+    font-size: 0.92rem;
+  }
+
+  .font-bold {
+    font-weight: 700;
+  }
+
+  .color-cyan {
+    color: #43C6D5;
+  }
+
+  .table-buy-link {
+    color: #F4A261;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .table-buy-link:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 992px) {
+    .plans-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

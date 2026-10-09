@@ -1,0 +1,157 @@
+---
+// src/pages/journey/index.astro
+import Layout from '../../layouts/Layout.astro';
+import { COMMERCIAL_AFF_URL } from '../../data/plans';
+
+const title = "FlyingBird连接旅程｜从选购订阅到客户端极速配置指南";
+const description = "了解 FlyingBird 5步连接流程：方案选择、订单支付、获取订阅链接、安装客户端以及网络延迟测试。";
+
+const steps = [
+  {
+    num: '01',
+    title: '了解与评估需求方案',
+    desc: '在开始前，评估您的设备使用习惯与需求。如果您需要每日频繁观看视频或进行开发下载，推荐选择 ¥15/月（300GB）的月度套餐；若仅作不定期查阅资料或长期备用，可考虑 ¥25（300GB）或 ¥60（1000GB）的一次性流量包。'
+  },
+  {
+    num: '02',
+    title: '前往商业平台确认开通',
+    desc: '点击本站“立即购买”按钮，跳转至 FlyingBird 官方指定商业平台。在订购界面确认结算价格、支付渠道与条款，完成账户注册与套餐开通。'
+  },
+  {
+    num: '03',
+    title: '获取专属 API 订阅链接',
+    desc: '登录 FlyingBird 个人中心后台，进入“订阅管理”模块。点击“一键复制订阅地址”或者利用二维码一键导入配置，该链接包含加密后的节点通信参数。'
+  },
+  {
+    num: '04',
+    title: '安装与导入代理客户端',
+    desc: '根据设备选择客户端：Windows 推荐 Clash Verge / Clash for Windows；macOS 推荐 Clash Verge / Stash；iOS 推荐 Shadowrocket / Stash；Android 推荐 Clash for Android / Surfboard。粘贴订阅 URL 即可拉取完整节点列表。'
+  },
+  {
+    num: '05',
+    title: '连通测试与规则分流',
+    desc: '在客户端中启动“系统代理”（System Proxy）或 TUN 模式，测试节点 Ping 延迟，推荐开启“Rule 规则分流”模式，确保国内流量直连，国外流量走 FlyingBird 节点。'
+  }
+];
+---
+
+<Layout title={title} description={description} canonicalPath="/journey/">
+  <section class="journey-page">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="tag-badge">连接旅程</span>
+        <h1 class="section-title">FlyingBird 五步极速连接指南</h1>
+        <p class="section-desc">
+          清晰的步骤引导，帮您从零开始建立高速、稳定的加密网络连接。
+        </p>
+      </div>
+
+      <div class="journey-cards-list">
+        {steps.map(s => (
+          <div class="journey-card">
+            <div class="card-num">{s.num}</div>
+            <div class="card-body">
+              <h2>{s.title}</h2>
+              <p>{s.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="journey-cta text-center">
+        <h3>准备好开启新的数字天空体验了吗？</h3>
+        <p>即刻开通 FlyingBird 订阅，获取专属优化线路。</p>
+        <div class="cta-btns">
+          <a href={COMMERCIAL_AFF_URL} target="_blank" rel="sponsored nofollow noopener" class="btn btn-primary">
+            立即前往订阅平台开通 →
+          </a>
+          <a href="/plans/" class="btn btn-secondary">
+            查看套餐价格详情
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .journey-page {
+    padding: 5rem 0;
+  }
+
+  .text-center {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .journey-cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+    max-width: 900px;
+    margin: 3rem auto;
+  }
+
+  .journey-card {
+    background: rgba(12, 38, 61, 0.7);
+    border: 1px solid rgba(67, 198, 213, 0.2);
+    border-radius: 16px;
+    padding: 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  .card-num {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #F4A261;
+    line-height: 1;
+  }
+
+  .card-body h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.6rem;
+    color: #F7FCFC;
+  }
+
+  .card-body p {
+    font-size: 0.95rem;
+    color: rgba(197, 233, 230, 0.82);
+    line-height: 1.7;
+  }
+
+  .journey-cta {
+    background: rgba(8, 30, 49, 0.6);
+    border: 1px solid rgba(67, 198, 213, 0.15);
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    margin-top: 4rem;
+  }
+
+  .journey-cta h3 {
+    font-size: 1.6rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .journey-cta p {
+    font-size: 1rem;
+    color: rgba(197, 233, 230, 0.75);
+    margin-bottom: 1.8rem;
+  }
+
+  .cta-btns {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 640px) {
+    .journey-card {
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+  }
+</style>

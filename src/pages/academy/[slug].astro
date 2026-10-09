@@ -1,0 +1,329 @@
+---
+// src/pages/academy/[slug].astro
+import Layout from '../../layouts/Layout.astro';
+import { ARTICLES, type Article } from '../../data/articles';
+import { COMMERCIAL_AFF_URL } from '../../data/plans';
+
+export async function getStaticPaths() {
+  return ARTICLES.map((article) => ({
+    params: { slug: article.slug },
+    props: { article }
+  }));
+}
+
+interface Props {
+  article: Article;
+}
+
+const { article } = Astro.props;
+
+// Find related articles objects
+const relatedArticles = ARTICLES.filter(a => article.relatedSlugs.includes(a.slug));
+
+// Convert basic markdown formatting to HTML paragraphs & headings
+function renderMarkdown(content: string) {
+  const lines = content.trim().split('\n');
+  let html = '';
+  let inUl = false;
+  let inTable = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i].trim();
+
+    if (!line) {
+      if (inUl) { html += '</ul>'; inUl = false; }
+      continue;
+    }
+
+    // Headers
+    if (line.startsWith('## ')) {
+      if (inUl) { html += '</ul>'; inUl = false; }
+      html += `<h2>${line.replace('## ', '')}</h2>`;
+      continue;
+    }
+    if (line.startsWith('### ')) {
+      if (inUl) { html += '</ul>'; inUl = false; }
+      html += `<h3>${line.replace('### ', '')}</h3>`;
+      continue;
+    }
+
+    // Unordered lists
+    if (line.startsWith('- ')) {
+      if (!inUl) { html += '<ul>'; inUl = true; }
+      const itemText = line.substring(2)
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+      html += `<li>${itemText}</li>`;
+      continue;
+    }
+
+    // Numbered lists
+    if (/^\d+\.\s/.test(line)) {
+      if (inUl) { html += '</ul>'; inUl = false; }
+      const itemText = line.replace(/^\d+\.\s/, '')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+      html += `<p><strong>${line.match(/^\d+/)?.[0]}. </strong>${itemText}</p>`;
+      continue;
+    }
+
+    // Paragraphs
+    if (inUl) { html += '</ul>'; inUl = false; }
+    
+    let processedLine = line
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+      
+    html += `<p>${processedLine}</p>`;
+  }
+
+  if (inUl) { html += '</ul>'; }
+
+  return html;
+}
+
+const htmlContent = renderMarkdown(article.content);
+
+// Article JSON-LD Structured Data
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": article.title,
+  "description": article.metaDescription,
+  "datePublished": article.publishDate,
+  "author": {
+    "@type": "Organization",
+    "name": "FlyingBird 机场知识库团队"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FlyingBird机场",
+    "url": "https://iflyingbird.cyou"
+  }
+};
+---
+
+<Layout 
+  title={article.metaTitle} 
+  description={article.metaDescription} 
+  canonicalPath={article.url}
+  ogType="article"
+  structuredData={structuredData}
+>
+  <article class="article-detail-page">
+    <div class="container article-container">
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" aria-label="面包屑导航">
+        <a href="/">首页</a>
+        <span class="sep">/</span>
+        <a href="/academy/">文章目录</a>
+        <span class="sep">/</span>
+        <span class="current">{article.title}</span>
+      </nav>
+
+      <!-- Article Header -->
+      <header class="article-header">
+        <h1 class="article-title">{article.title}</h1>
+        <div class="article-meta">
+          <span>发布日期：{article.publishDate}</span>
+          <span>·</span>
+          <span>预计阅读时间：{article.readTime}</span>
+          <span>·</span>
+          <span>来源：FlyingBird 原创技术团队</span>
+        </div>
+      </header>
+
+      <!-- Summary Callout -->
+      <div class="summary-box">
+        <strong>核心摘要：</strong> {article.summary}
+      </div>
+
+      <!-- Article Body -->
+      <div class="prose article-body" set:html={htmlContent} />
+
+      <!-- Affiliate Action Banner inside Article -->
+      <div class="article-cta-box">
+        <h3>开通 FlyingBird 网络订阅服务</h3>
+        <p>体验 300GB 月付套餐与高性价比一次性流量包，获取全球多地区节点支持。</p>
+        <div class="cta-actions">
+          <a href={COMMERCIAL_AFF_URL} target="_blank" rel="sponsored nofollow noopener" class="btn btn-orange">
+            前往商业平台购买 →
+          </a>
+          <a href="/plans/" class="btn btn-secondary">
+            查看全部套餐列表
+          </a>
+        </div>
+      </div>
+
+      <!-- Related Articles -->
+      {relatedArticles.length > 0 && (
+        <section class="related-section">
+          <h3>相关推荐阅读</h3>
+          <div class="related-grid">
+            {relatedArticles.map(rel => (
+              <a href={rel.url} class="related-card">
+                <h4>{rel.title}</h4>
+                <p>{rel.summary}</p>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .article-detail-page {
+    padding: 3rem 0 5rem;
+  }
+
+  .article-container {
+    max-width: 860px;
+  }
+
+  .breadcrumb {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.88rem;
+    color: rgba(197, 233, 230, 0.6);
+    margin-bottom: 2rem;
+  }
+
+  .breadcrumb a {
+    color: rgba(197, 233, 230, 0.8);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    color: #43C6D5;
+  }
+
+  .breadcrumb .current {
+    color: #43C6D5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 400px;
+  }
+
+  .article-header {
+    margin-bottom: 2rem;
+  }
+
+  .article-title {
+    font-size: 2.3rem;
+    line-height: 1.25;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #FFFFFF 0%, #C5E9E6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .article-meta {
+    display: flex;
+    gap: 0.6rem;
+    font-size: 0.88rem;
+    color: rgba(197, 233, 230, 0.65);
+    flex-wrap: wrap;
+  }
+
+  .summary-box {
+    background: rgba(67, 198, 213, 0.1);
+    border-left: 4px solid #43C6D5;
+    border-radius: 0 10px 10px 0;
+    padding: 1.2rem 1.5rem;
+    font-size: 1rem;
+    color: #C5E9E6;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+  }
+
+  .article-body {
+    margin-bottom: 3.5rem;
+  }
+
+  .article-cta-box {
+    background: rgba(12, 38, 61, 0.85);
+    border: 1px solid rgba(67, 198, 213, 0.25);
+    border-radius: 16px;
+    padding: 2.2rem;
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+
+  .article-cta-box h3 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .article-cta-box p {
+    font-size: 0.95rem;
+    color: rgba(197, 233, 230, 0.8);
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .related-section {
+    border-top: 1px solid rgba(197, 233, 230, 0.15);
+    padding-top: 2.5rem;
+  }
+
+  .related-section h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    color: #F7FCFC;
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .related-card {
+    background: rgba(12, 38, 61, 0.5);
+    border: 1px solid rgba(67, 198, 213, 0.15);
+    border-radius: 12px;
+    padding: 1.4rem;
+    text-decoration: none;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .related-card:hover {
+    border-color: #43C6D5;
+    transform: translateY(-2px);
+  }
+
+  .related-card h4 {
+    font-size: 1.05rem;
+    color: #F7FCFC;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+  }
+
+  .related-card p {
+    font-size: 0.85rem;
+    color: rgba(197, 233, 230, 0.7);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 640px) {
+    .article-title {
+      font-size: 1.7rem;
+    }
+    .related-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
